@@ -17,6 +17,12 @@ public class PessoaService {
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
+	public PessoaDTO findById(Long id){
+		Pessoa pessoa = pessoaRepository.findById(id).orElseThrow(() -> new RuntimeException("Id não encontrado!"));
+
+		return toPessoaDTO(pessoa);
+	}
+
 	public List<PessoaDTO> listAll(){
 		List<Pessoa> lista = pessoaRepository.findAll();
 		List<PessoaDTO> listaDTO = new ArrayList<>();
@@ -41,6 +47,8 @@ public class PessoaService {
 		Assert.isTrue(pessoaDTO.getId().equals(pessoa.getId()), "Id's não conferem!");
 
 		pessoa = toPessoa(pessoaDTO);
+
+		pessoaRepository.save(pessoa);
 
 		return this.toPessoaDTO(pessoa);
 	}
